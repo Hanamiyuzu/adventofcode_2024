@@ -27,13 +27,7 @@ fn puzzle2(str: &str) -> i32 {
     }
     let sum = s1
         .iter()
-        .map(|x| {
-            if let Some(c) = count_map.get(x) {
-                x * c
-            } else {
-                0
-            }
-        })
+        .map(|x| count_map.get(x).map_or(0, |c| x * c))
         .sum();
     println!("puzzle2 = {sum}");
     sum
