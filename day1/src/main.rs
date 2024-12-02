@@ -1,6 +1,9 @@
+use std::collections::HashMap;
+
 fn main() {
     let str = include_str!("../input.txt");
     puzzle1(str);
+    puzzle2(str);
 }
 
 fn puzzle1(str: &str) -> i32 {
@@ -13,6 +16,26 @@ fn puzzle1(str: &str) -> i32 {
         .map(|(x1, x2)| (x1 - x2).abs())
         .sum::<i32>();
     println!("puzzle1 = {sum}");
+    sum
+}
+
+fn puzzle2(str: &str) -> i32 {
+    let (s1, s2) = parse(str);
+    let mut count_map = HashMap::new();
+    for &x in s2.iter() {
+        *count_map.entry(x).or_insert(0) += 1;
+    }
+    let sum = s1
+        .iter()
+        .map(|x| {
+            if let Some(c) = count_map.get(x) {
+                x * c
+            } else {
+                0
+            }
+        })
+        .sum();
+    println!("puzzle2 = {sum}");
     sum
 }
 
@@ -41,5 +64,16 @@ mod tests {
 3   9
 3   3";
         assert_eq!(puzzle1(input), 11);
+    }
+
+    #[test]
+    fn test_puzzle2() {
+        let input = "3   4
+4   3
+2   5
+1   3
+3   9
+3   3";
+        assert_eq!(puzzle2(input), 31);
     }
 }
