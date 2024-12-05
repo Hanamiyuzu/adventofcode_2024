@@ -6,59 +6,39 @@ fn main() {
 
 fn puzzle1(str: &str) -> i32 {
     let map = parse(str);
-    let count = map
-        .iter()
-        .enumerate()
-        .map(|(i, line)| {
-            line.iter()
-                .enumerate()
-                .filter(|(_, &ch)| ch == 'X')
-                .map(|(j, &ch)| {
-                    DIRS.iter()
-                        .map(|dir| search(&map, i as i32, j as i32, ch, dir))
-                        .sum::<i32>()
-                })
-                .sum::<i32>()
-        })
-        .sum();
+    let mut count = 0;
+    for (i, row) in map.iter().enumerate() {
+        for (j, &ch) in row.iter().enumerate().filter(|(_, &ch)| ch == 'X') {
+            count += DIRS
+                .iter()
+                .map(|dir| search(&map, i as i32, j as i32, ch, dir))
+                .sum::<i32>();
+        }
+    }
     println!("puzzle1 = {}", count);
     count
 }
 
 fn puzzle2(str: &str) -> i32 {
     let map = parse(str);
-    let count = map
-        .iter()
-        .enumerate()
-        .map(|(i, line)| {
-            line.iter()
-                .enumerate()
-                .filter(|(_, &ch)| ch == 'A')
-                .map(|(j, _)| {
-                    let a = safe_get(&map, i as i32 - 1, j as i32 - 1);
-                    let b = safe_get(&map, i as i32 + 1, j as i32 + 1);
-                    let c = safe_get(&map, i as i32 + 1, j as i32 - 1);
-                    let d = safe_get(&map, i as i32 - 1, j as i32 + 1);
-                    ((a == 'M' && b == 'S') || (a == 'S' && b == 'M'))
-                        && ((c == 'M' && d == 'S') || (c == 'S' && d == 'M'))
-                })
-                .map(|x| x as i32)
-                .sum::<i32>()
-        })
-        .sum();
+    let mut count = 0;
+    for (i, row) in map.iter().enumerate() {
+        for (j, _) in row.iter().enumerate().filter(|(_, &ch)| ch == 'A') {
+            let a = safe_get(&map, i as i32 - 1, j as i32 - 1);
+            let b = safe_get(&map, i as i32 + 1, j as i32 + 1);
+            let c = safe_get(&map, i as i32 + 1, j as i32 - 1);
+            let d = safe_get(&map, i as i32 - 1, j as i32 + 1);
+            count += (((a == 'M' && b == 'S') || (a == 'S' && b == 'M'))
+                && ((c == 'M' && d == 'S') || (c == 'S' && d == 'M'))) as i32;
+        }
+    }
     println!("puzzle2 = {}", count);
     count
 }
 
+#[rustfmt::skip]
 const DIRS: [(i32, i32); 8] = [
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-    (0, -1),
-    (0, 1),
-    (1, -1),
-    (1, 0),
-    (1, 1),
+    (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)
 ];
 
 fn search(map: &Vec<Vec<char>>, i: i32, j: i32, ch: char, dir: &(i32, i32)) -> i32 {
