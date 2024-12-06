@@ -1,6 +1,6 @@
 fn main() {
     let str = include_str!("../input.txt");
-    puzzle1(str);
+    println!("puzzle1 = {}", puzzle1(str));
 }
 
 fn puzzle1(str: &str) -> i32 {

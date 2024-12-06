@@ -2,24 +2,22 @@ use itertools::Itertools;
 
 fn main() {
     let str = include_str!("../input.txt");
-    puzzle1(str);
-    puzzle2(str);
+    println!("puzzle1 = {}", puzzle1(str));
+    println!("puzzle2 = {}", puzzle2(str));
 }
 
 fn puzzle1(str: &str) -> i32 {
     let input = parse(str);
-    let count = input
+    input
         .iter()
         .map(|v| is_safe(v.iter()))
         .map(|x| x as i32)
-        .sum();
-    println!("puzzle1: {count}");
-    count
+        .sum()
 }
 
 fn puzzle2(str: &str) -> i32 {
     let input = parse(str);
-    let count = input
+    input
         .iter()
         .map(|v| {
             v.iter()
@@ -27,9 +25,7 @@ fn puzzle2(str: &str) -> i32 {
                 .any(|(i, _)| is_safe(v[0..i].iter().chain(v[i + 1..].iter())))
         })
         .map(|x| x as i32)
-        .sum();
-    println!("puzzle2: {count}");
-    count
+        .sum()
 }
 
 fn is_safe<'a, T>(iter: T) -> bool

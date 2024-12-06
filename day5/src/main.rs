@@ -1,12 +1,12 @@
 fn main() {
     let str = include_str!("../input.txt");
-    puzzle1(str);
-    puzzle2(str);
+    println!("puzzle1 = {}", puzzle1(str));
+    println!("puzzle2 = {}", puzzle2(str));
 }
 
 fn puzzle1(str: &str) -> usize {
     let (rules, input) = parse(str);
-    let sum = input
+    input
         .iter()
         .map(|v| {
             if is_match_rules(&rules, v) {
@@ -15,14 +15,12 @@ fn puzzle1(str: &str) -> usize {
                 0
             }
         })
-        .sum();
-    println!("puzzle1 = {}", sum);
-    sum
+        .sum()
 }
 
 fn puzzle2(str: &str) -> usize {
     let (rules, input) = parse(str);
-    let sum = input
+    input
         .iter()
         .map(|v| {
             if !is_match_rules(&rules, v) {
@@ -38,9 +36,7 @@ fn puzzle2(str: &str) -> usize {
             }
             0
         })
-        .sum();
-    println!("puzzle2 = {}", sum);
-    sum
+        .sum()
 }
 
 fn is_match_rules(rules: &[[bool; 100]; 100], v: &[usize]) -> bool {

@@ -2,21 +2,18 @@ use std::collections::HashMap;
 
 fn main() {
     let str = include_str!("../input.txt");
-    puzzle1(str);
-    puzzle2(str);
+    println!("puzzle1 = {}", puzzle1(str));
+    println!("puzzle2 = {}", puzzle2(str));
 }
 
 fn puzzle1(str: &str) -> i32 {
     let (mut s1, mut s2) = parse(str);
     s1.sort_unstable();
     s2.sort_unstable();
-    let sum = s1
-        .iter()
+    s1.iter()
         .zip(s2.iter())
         .map(|(x1, x2)| (x1 - x2).abs())
-        .sum::<i32>();
-    println!("puzzle1 = {sum}");
-    sum
+        .sum::<i32>()
 }
 
 fn puzzle2(str: &str) -> i32 {
@@ -25,12 +22,9 @@ fn puzzle2(str: &str) -> i32 {
     for &x in s2.iter() {
         *count_map.entry(x).or_insert(0) += 1;
     }
-    let sum = s1
-        .iter()
+    s1.iter()
         .map(|x| count_map.get(x).map_or(0, |c| x * c))
-        .sum();
-    println!("puzzle2 = {sum}");
-    sum
+        .sum()
 }
 
 fn parse(str: &str) -> (Vec<i32>, Vec<i32>) {

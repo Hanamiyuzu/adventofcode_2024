@@ -2,20 +2,17 @@ use regex::Regex;
 
 fn main() {
     let str = include_str!("../input.txt");
-    puzzle1(str);
-    puzzle2(str);
+    println!("puzzle1 = {}", puzzle1(str));
+    println!("puzzle2 = {}", puzzle2(str));
 }
 
 fn puzzle1(str: &str) -> i32 {
     let str = parse(str);
     let re = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
-    let sum = re
-        .captures_iter(str)
+    re.captures_iter(str)
         .map(|c| c.extract())
         .map(|(_, [a, b])| a.parse::<i32>().unwrap() * b.parse::<i32>().unwrap())
-        .sum();
-    println!("puzzle1 = {}", sum);
-    sum
+        .sum()
 }
 
 fn puzzle2(str: &str) -> i32 {
@@ -26,7 +23,6 @@ fn puzzle2(str: &str) -> i32 {
         str = str[pos..].find("do()").map_or("", |pp| &str[pos + pp..]);
     }
     sum += puzzle1(str);
-    println!("puzzle2 = {}", sum);
     sum
 }
 

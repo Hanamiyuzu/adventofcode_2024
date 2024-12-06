@@ -1,7 +1,7 @@
 fn main() {
     let str = include_str!("../input.txt");
-    puzzle1(str);
-    puzzle2(str);
+    println!("puzzle1 = {}", puzzle1(str));
+    println!("puzzle2 = {}", puzzle2(str));
 }
 
 fn puzzle1(str: &str) -> i32 {
@@ -15,7 +15,6 @@ fn puzzle1(str: &str) -> i32 {
                 .sum::<i32>();
         }
     }
-    println!("puzzle1 = {}", count);
     count
 }
 
@@ -32,7 +31,6 @@ fn puzzle2(str: &str) -> i32 {
                 && ((c == 'M' && d == 'S') || (c == 'S' && d == 'M'))) as i32;
         }
     }
-    println!("puzzle2 = {}", count);
     count
 }
 
