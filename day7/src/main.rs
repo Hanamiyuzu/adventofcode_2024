@@ -1,6 +1,7 @@
 fn main() {
     let str = include_str!("../input.txt");
     println!("puzzle1 = {}", puzzle1(str));
+    println!("puzzle2 = {}", puzzle2(str));
 }
 
 fn puzzle1(str: &str) -> i64 {
@@ -12,11 +13,34 @@ fn puzzle1(str: &str) -> i64 {
         .sum()
 }
 
+fn puzzle2(str: &str) -> i64 {
+    let inputs = parse(str);
+    inputs
+        .iter()
+        .filter(|(test, nums)| calc2(*test, &nums[1..], nums[0]))
+        .map(|(x, _)| x)
+        .sum()
+}
+
 fn calc(test: i64, nums: &[i64], sum: i64) -> bool {
     if nums.is_empty() {
         test == sum
     } else {
         calc(test, &nums[1..], sum + nums[0]) || calc(test, &nums[1..], sum * nums[0])
+    }
+}
+
+fn calc2(test: i64, nums: &[i64], sum: i64) -> bool {
+    if nums.is_empty() {
+        test == sum
+    } else {
+        calc2(test, &nums[1..], sum + nums[0])
+            || calc2(test, &nums[1..], sum * nums[0])
+            || calc2(
+                test,
+                &nums[1..],
+                format!("{}{}", sum, nums[0]).parse().unwrap(),
+            )
     }
 }
 
