@@ -12,17 +12,24 @@ fn puzzle1(str: &str) -> usize {
     let mut antennas = HashMap::new();
     for (i, row) in map.iter().enumerate() {
         for (j, &ch) in row.iter().enumerate().filter(|(_, &ch)| ch != '.') {
-            let (i, j) = (i as i32, j as i32);
-            antennas.entry(ch).or_insert(Vec::new()).push((i, j));
+            antennas
+                .entry(ch)
+                .or_insert(Vec::new())
+                .push((i as i32, j as i32));
         }
     }
     let mut ans = HashSet::new();
     for v in antennas.values() {
         for perm in v.iter().permutations(2) {
-            let (dx, dy) = (perm[1].0 - perm[0].0, perm[1].1 - perm[0].1);
-            let (x, y) = (perm[0].0 - dx, perm[0].1 - dy);
-            if x >= 0 && x < cols && y >= 0 && y < rows {
-                ans.insert((x, y));
+            let (dr, dc) = (perm[1].0 - perm[0].0, perm[1].1 - perm[0].1);
+            let (row, col) = (perm[0].0 - dr, perm[0].1 - dc);
+            if row >= 0 && row < rows && col >= 0 && col < cols {
+                ans.insert((row, col));
+            }
+        }
+    }
+    ans.len()
+}
             }
         }
     }
