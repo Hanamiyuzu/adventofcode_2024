@@ -3,6 +3,7 @@ use std::collections::HashSet;
 fn main() {
     let str = include_str!("../input.txt");
     println!("puzzle1 = {}", puzzle1(str));
+    println!("puzzle2 = {}", puzzle2(str));
 }
 
 fn puzzle1(str: &str) -> i32 {
@@ -10,20 +11,37 @@ fn puzzle1(str: &str) -> i32 {
     let mut sum = 0;
     for (i, row) in map.iter().enumerate() {
         for (j, _) in row.iter().enumerate().filter(|(_, &c)| c == '0') {
-            sum += dfs(&map, i as i32, j as i32, &mut HashSet::new());
+            sum += dfs(&map, i as i32, j as i32, &mut Some(HashSet::new()));
         }
     }
     sum
 }
 
-fn dfs(map: &[Vec<char>], i: i32, j: i32, visited: &mut HashSet<(i32, i32)>) -> i32 {
+fn puzzle2(str: &str) -> i32 {
+    let map = parse(str);
+    let mut sum = 0;
+    for (i, row) in map.iter().enumerate() {
+        for (j, _) in row.iter().enumerate().filter(|(_, &c)| c == '0') {
+            sum += dfs(&map, i as i32, j as i32, &mut None);
+        }
+    }
+    sum
+}
+
+fn dfs(map: &[Vec<char>], i: i32, j: i32, visited: &mut Option<HashSet<(i32, i32)>>) -> i32 {
     if i < 0 || i >= map.len() as i32 || j < 0 || j >= map[0].len() as i32 {
         return 0;
     }
     let c = map[i as usize][j as usize];
     match c {
         '.' => 0,
-        '9' => visited.insert((i, j)) as i32,
+        '9' => {
+            if let Some(visited) = visited {
+                visited.insert((i, j)) as i32
+            } else {
+                1
+            }
+        }
         _ => [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]
             .iter()
             .filter(|&&(i, j)| sub(safe_get(map, i, j), c) == 1)
@@ -71,5 +89,35 @@ mod tests {
 01329801
 10456732";
         assert_eq!(puzzle1(input2), 36);
+    }
+
+    #[test]
+    fn test_puzzle2() {
+        let input1 = "..90..9
+...1.98
+...2..7
+6543456
+765.987
+876....
+987....";
+        assert_eq!(puzzle2(input1), 13);
+
+        let input2 = "89010123
+78121874
+87430965
+96549874
+45678903
+32019012
+01329801
+10456732";
+        assert_eq!(puzzle2(input2), 81);
+
+        let input3 = "012345
+123456
+234567
+345678
+4.6789
+56789.";
+        assert_eq!(puzzle2(input3), 227);
     }
 }
